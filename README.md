@@ -7,7 +7,7 @@
 
 - **前沿模型应用**：选用Qwen3-8B作为基座模型，利用其强大的中文理解能力。
 - **高效参数微调**：采用LoRA技术，在有限的计算资源下高效地完成了模型的领域自适应。
-- [cite_start]**定制化数据增强**：针对中文网络“黑话”频现的特点，构建了**对抗性词典** [cite: 1, 2]，将4000条训练数据扩充至近8000条，显著提升了模型的鲁棒性。
+- **定制化数据增强**：针对中文网络“黑话”频现的特点，构建了**对抗性词典**，将4000条训练数据扩充至近8000条，显著提升了模型的鲁棒性。
 - **创新的推理策略**：引入**自检索增强生成（SRAG）**模块，通过在推理时提供上下文范例，有效提升了模型输出的准确性和格式稳定性。
 
 ## **文件结构** 📂
@@ -36,7 +36,7 @@ pip install torch transformers datasets peft trl sentence-transformers faiss-cpu
 
 ### **2. 数据增强 (可选但推荐)**
 
-[cite_start]直接运行`data_reinforce.ipynb` [cite: 3][cite_start]可以对原始的`train.json` [cite: 4]进行数据增强。脚本的核心是利用一个**对抗性词典**，对原始句子进行“黑话”和标准词之间的随机替换。
+直接运行`data_reinforce.ipynb` 可以对原始的`train.json` 进行数据增强。脚本的核心是利用一个**对抗性词典**，对原始句子进行“黑话”和标准词之间的随机替换。
 
 - **输入**: `train.json`
 - **输出**: 一个扩充后的训练文件（例如 `train_augmented.jsonl`）
@@ -45,7 +45,7 @@ pip install torch transformers datasets peft trl sentence-transformers faiss-cpu
 
 ### **3. 模型训练**
 
-[cite_start]`train.ipynb` [cite: 5]是本项目的核心训练文件。
+`train.ipynb` 是本项目的核心训练文件。
 
 - **加载数据**：脚本会加载处理后的训练数据。为获得最佳性能，建议使用第2步中生成的增强数据集。
 - **模型配置**：定义Qwen3-8B模型、Tokenizer，并配置LoRA参数。
@@ -53,11 +53,11 @@ pip install torch transformers datasets peft trl sentence-transformers faiss-cpu
 
 ### **4. 推理与评估**
 
-[cite_start]`inference.ipynb` [cite: 6]用于在测试集上进行推理和评估。
+`inference.ipynb` 用于在测试集上进行推理和评估。
 
 - **加载模型**：脚本会加载原始的Qwen3-8B基座模型，并合并已训练好的LoRA权重。
 - **构建SRAG知识库**：在首次运行时，脚本会使用训练数据构建一个FAISS向量索引库，为SRAG提供检索支持。
-- [cite_start]**执行推理**：对于`test1.json` [cite: 7]中的每一条数据，SRAG模块会先从知识库中检索最相似的范例，然后将范例和原始数据一同输入模型，生成最终的四元组结果。
+- **执行推理**：对于`test1.json` 中的每一条数据，SRAG模块会先从知识库中检索最相似的范例，然后将范例和原始数据一同输入模型，生成最终的四元组结果。
 - **输出**: 结果将被保存在一个`.txt`文件中，可直接用于提交至评测系统。
 
 ## **核心方法简介**
